@@ -415,6 +415,10 @@ export function AccountsProvider({ children = null as any }) {
   }, [nativeAccount, publicKey, tokenAccounts]);
 
   useEffect(() => {
+    console.log('----------');
+    console.log(connection);
+    console.log(publicKey);
+    console.log('----------');
     if (!connection || !publicKey) {
       setTokenAccounts([]);
     } else {
@@ -429,10 +433,10 @@ export function AccountsProvider({ children = null as any }) {
         const response = await getMultipleAccounts(connection, mints, 'single');
 
         response.keys.forEach((key, index) => {
-          if (response.array[index]) {
+          if (response.array[index] && key != "11111111111111111111111111111111") {
             try {
               cache.addMint(new PublicKey(key), response.array[index]);
-            } catch {
+            } catch(e) {
               debugger;
             }
           }
