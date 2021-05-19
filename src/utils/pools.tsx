@@ -603,6 +603,9 @@ export const usePools = () => {
     const subID = connection.onProgramAccountChange(
       programIds().swap,
       async (info) => {
+        console.log('---info---');
+        console.log(info);
+        console.log('---info---');
         const id = (info.accountId as unknown) as string;
         if (info.accountInfo.data.length === programIds().swapLayout.span) {
           const account = info.accountInfo;
