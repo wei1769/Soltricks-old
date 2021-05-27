@@ -4,7 +4,7 @@ import { SettingOutlined } from "@ant-design/icons";
 import { Settings } from "./settings";
 import { AppBar } from "./appBar";
 
-export const ManualView = (props: {}) => {
+export const ManualView = props => {
   return (
     <>
       <AppBar

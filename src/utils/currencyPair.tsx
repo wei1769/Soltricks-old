@@ -163,6 +163,8 @@ export function CurrencyPairProvider({ children = null as any }) {
   }, [mintAddressA, mintAddressB, tokens, history, location.pathname]);
 
   // Updates tokens on location change
+  
+  /*
   useEffect(() => {
     if (!location.search && mintAddressA && mintAddressB) {
       return;
@@ -189,6 +191,7 @@ export function CurrencyPairProvider({ children = null as any }) {
     // mintAddressA and mintAddressB are not included here to prevent infinite loop
     // eslint-disable-next-line
   }, [location, location.search, setMintAddressA, setMintAddressB, tokens]);
+  */
 
   const calculateDependent = useCallback(async () => {
     if (pool && mintAddressA && mintAddressB) {
