@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Input } from "antd";
+import { Button, Card, Input, Typography } from "antd";
 import { NumericInput } from "../numericInput";
 import { TokenSelect } from "../TokenSelect";
 
 export const TokenTransaction = (props) => {
+  const { setIns, ins } = props;
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [tokenAdress, setTokenAdress] = useState("");
+  const { Title } = Typography;
 
   return (
     <div
@@ -16,12 +18,20 @@ export const TokenTransaction = (props) => {
         alignItems: "center",
       }}
     >
-      <TokenSelect setSelected={setTokenAdress} />
+      <Title level={4}>Token Transaction</Title>
+      <TokenSelect 
+        setSelected={setTokenAdress}
+        placeholder={'Select a Token'}
+        valueType='mint'
+      />
       <Input
         placeholder="Recipient's Address"
         style={{ margin: "5px 0" }}
         value={address}
-        onChange={(val) => setAddress(val)}
+        onChange={e => {
+          const val = e.target.value;
+          setAddress(val);
+        }}
         onBlur={() => {}}
       />
       <NumericInput
@@ -32,8 +42,17 @@ export const TokenTransaction = (props) => {
         placeholder="Amount"
       />
       <Button
-        style={{ margin: "10px 0" }}
-        onClick={() => console.log(tokenAdress)}
+        style={{ margin: "5rem 0" }}
+        onClick={() => {
+          setIns([...ins, {
+            name:'Token Transaction',
+            instruction: {
+              mint: tokenAdress,
+              destination: address,
+              amount: amount
+            }
+          }])
+        }}
       >
         Add Instruction
       </Button>
