@@ -35,7 +35,11 @@ export const Jobs = (props) => {
       {ins.map((i, k) => {
         return (
           <Panel header={<PanelHeader insIndex={k} name={i.name}/>} key={i.name}>
-            <p>Test</p>
+            {
+              i.info.map( i => {
+                return (<div style={{display:'flex'}} ><p>{i.name}:</p><p style={{marginLeft:'1rem'}}>{i.content}</p></div>);
+              })
+            }
           </Panel>
         );
       })}

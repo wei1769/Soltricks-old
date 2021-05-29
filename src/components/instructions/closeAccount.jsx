@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useConnection, useConnectionConfig } from "../../utils/connection";
+import { closeAccount } from "../../utils/layout";
 import {
   PublicKey,
 } from "@solana/web3.js";
@@ -13,6 +14,15 @@ export const CloseAccount = props => {
   const [ accountAdress, setAccountAdress ] = useState('');
   const { wallet, connected } = useWallet();
   const { Title } = Typography;
+
+  const buildInstruction = (account) => {
+    const source = new PublicKey(account);
+    const  destination = wallet.publicKey;
+    const  owner = wallet.publicKey;
+    
+    return closeAccount({ source, destination, owner });
+  };
+
   return (
     <div
         style={{
@@ -31,9 +41,18 @@ export const CloseAccount = props => {
         style={{ margin: "1rem 0" }}
         onClick={
           ()=>{
+            const info = [
+              {
+                'name': 'Metadata',
+                'content': accountAdress
+              }
+            ];
+            const instruction = buildInstruction(accountAdress);
             setIns([...ins, {
-              name:'Close Account',
-              instruction: accountAdress
+              name: 'Close Account',
+              type: 'CloseAccount',
+              info,
+              instruction
             }])
           }
         }

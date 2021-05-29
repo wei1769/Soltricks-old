@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import {
+  Transaction
+} from "@solana/web3.js";
 import { Button, Card, Popover, Select } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { Settings } from "./settings";
@@ -32,6 +35,16 @@ export const ManualView = (props) => {
     'TokenTransaction': <TokenTransaction setIns={setIns} ins={ins} />,
     'CloseAccount': <CloseAccount setIns={setIns} ins={ins} />
   };
+
+  const buildTransaction = ins => {
+    const transaction = new Transaction();
+    ins.forEach(i => {
+      transaction.add(i.instruction);
+    });
+    console.log(transaction);
+    return transaction;
+  };
+
   return (
     <>
       <AppBar
@@ -94,6 +107,9 @@ export const ManualView = (props) => {
         }}
       >
         <Jobs ins={ins} setIns={setIns} />
+      </div>
+      <div>
+        <Button onClick={()=>buildTransaction(ins)}>Send</Button>
       </div>
     </>
   );
