@@ -50,7 +50,6 @@ export const ManualView = (props) => {
         instructions,
         signers
       );
-      console.log(tx);
       notify({
         message: "Transaction success.",
         type: "success",
