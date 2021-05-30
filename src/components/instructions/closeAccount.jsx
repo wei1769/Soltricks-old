@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useConnection, useConnectionConfig } from "../../utils/connection";
+import { notify } from "../../utils/notifications";
 import { closeAccount } from "../../utils/layout";
 import {
   PublicKey,
@@ -23,6 +24,16 @@ export const CloseAccount = props => {
     return closeAccount({ source, destination, owner });
   };
 
+  const checkAmount = txt => {
+    let newTxt = txt.split('(');
+    let amount
+    for (let i = 1; i < newTxt.length; i++) {
+      amount = newTxt[i].split(')')[0];
+    }
+    
+    return amount == 0;
+  };
+
   return (
     <div
         style={{
@@ -41,6 +52,14 @@ export const CloseAccount = props => {
         style={{ margin: "1rem 0" }}
         onClick={
           ()=>{
+            const emptyAccount = checkAmount(accountAdress.children);
+            if(!emptyAccount){
+              notify({
+                message: "Not empty account",
+                description: "Please aware if close not empty account will cause transaction fail.",
+                type: "warn",
+              });
+            }
             const info = [
               {
                 'name': 'Token Name',
