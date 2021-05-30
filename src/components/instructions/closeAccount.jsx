@@ -21,7 +21,7 @@ export const CloseAccount = props => {
     const  destination = wallet.publicKey;
     const  owner = wallet.publicKey;
     
-    return closeAccount({ source, destination, owner });
+    return [closeAccount({ source, destination, owner })];
   };
 
   const checkAmount = txt => {
@@ -52,7 +52,7 @@ export const CloseAccount = props => {
         style={{ margin: "1rem 0" }}
         onClick={
           ()=>{
-            const emptyAccount = checkAmount(accountAdress.children);
+            const emptyAccount = checkAmount(accountAdress.label);
             if(!emptyAccount){
               notify({
                 message: "Not empty account",
@@ -63,19 +63,19 @@ export const CloseAccount = props => {
             const info = [
               {
                 'name': 'Token Name',
-                'content': accountAdress.children
+                'content': accountAdress.label
               },
               {
                 'name': 'Token Address',
-                'content': accountAdress.value
+                'content': accountAdress.meta
               },
             ];
-            const instruction = buildInstruction(accountAdress.key);
+            const instructions = buildInstruction(accountAdress.meta);
             setIns([...ins, {
               name: 'Close Account',
               type: 'CloseAccount',
               info,
-              instruction
+              instructions
             }])
           }
         }

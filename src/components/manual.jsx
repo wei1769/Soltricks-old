@@ -42,8 +42,8 @@ export const ManualView = (props) => {
 
   const buildAndSendTransaction = async (instructions) => {
     const signers = [];
+    console.log(instructions);
     if(connected){
-      console.log(instructions);
       const tx = await sendTransaction(
         connection,
         wallet,
@@ -123,8 +123,10 @@ export const ManualView = (props) => {
       </div>
       <div style={{display:'flex', justifyContent:'center'}}>
         <Button style={{margin:'0.5rem'}} onClick={()=>{
-          const instructions = ins.map(i => i.instruction);
-          buildAndSendTransaction(instructions);
+          const instructions = ins.map(i => i.instructions);
+          const flattenIns = [].concat.apply([], instructions);
+          console.log(flattenIns);
+          buildAndSendTransaction(flattenIns);
         }}>Send</Button>
         <Button style={{margin:'0.5rem'}} onClick={()=>{
           setIns([]);

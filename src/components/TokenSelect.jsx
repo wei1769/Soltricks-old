@@ -63,7 +63,8 @@ export const TokenSelect = props => {
           return {
             mint: info.mint,
             amount: info.tokenAmount.uiAmountString,
-            meta: meta.toString()
+            meta: meta.toString(),
+            decimals: info.tokenAmount.decimals
           };
         });
         const tokens = ownedTokenList.map(ownedToken => {
@@ -85,7 +86,8 @@ export const TokenSelect = props => {
               logo: '',
               amount: ownedToken.amount,
               label: label + '(' + ownedToken.amount + ')',
-              meta: ownedToken.meta
+              meta: ownedToken.meta,
+              decimals: ownedToken.decimals
             };
           }else{
             return {
@@ -95,7 +97,8 @@ export const TokenSelect = props => {
               logo: temp.logoURI,
               amount: ownedToken.amount,
               label: temp.name + '(' + ownedToken.amount + ')',
-              meta: ownedToken.meta
+              meta: ownedToken.meta,
+              decimals: ownedToken.decimals
             };
           }
         });
@@ -113,9 +116,10 @@ export const TokenSelect = props => {
           placeholder={placeholder}
           optionFilterProp="children"
           onChange={(val, option) => {
-            console.log(option);
-            console.log(val);
-            setSelected(option);
+            const value = ownedTokens.filter(token => {
+              return token.meta == option.key;
+            });
+            setSelected(value[0]);
           }}
           onFocus={() => {}}
           onBlur={() => {}}

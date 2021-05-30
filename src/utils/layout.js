@@ -108,6 +108,7 @@ export function transferChecked({ source, mint, destination, amount, decimals, o
     { pubkey: destination, isSigner: false, isWritable: true },
     { pubkey: owner, isSigner: true, isWritable: false },
   ];
+  console.log(amount);
   return new TransactionInstruction({
     keys,
     data: encodeTokenInstructionData({

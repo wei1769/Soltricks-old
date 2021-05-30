@@ -8,6 +8,7 @@ import { Button, Card, Input, Typography } from "antd";
 import { NumericInput } from "../numericInput";
 import { TokenSelect } from "../TokenSelect";
 import { transferChecked, closeAccount } from "../../utils/layout";
+import { transferTokenCheck } from "../../utils/token";
 
 export const TokenTransaction = (props) => {
   const { setIns, ins } = props;
@@ -15,15 +16,26 @@ export const TokenTransaction = (props) => {
   const { wallet, connected } = useWallet();
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
-  const [tokenAdress, setTokenAdress] = useState("");
+  const [tokenAdress, setTokenAdress] = useState({});
   const { Title } = Typography;
 
-  const buildInstruction = (account) => {
-    const source = new PublicKey(account);
-    const  destination = wallet.publicKey;
-    const  owner = wallet.publicKey;
+  const buildInstruction = async (source, amount, mint, decimals, overrideDestinationCheck = false) => {
+    const sourcePublicKey = new PublicKey(source);
+    const destinationPublicKey = new PublicKey(address);
+    const owner = wallet.publicKey;
+    console.log(owner);
+    const instructions = transferTokenCheck({
+      connection,
+      owner,
+      sourcePublicKey,
+      destinationPublicKey,
+      amount,
+      mint: new PublicKey(mint),
+      decimals,
+      overrideDestinationCheck,
+    })
     
-    return closeAccount({ source, destination, owner });
+    return instructions;
   };
 
   return (
@@ -60,7 +72,32 @@ export const TokenTransaction = (props) => {
       <Button
         style={{ margin: "1rem 0" }}
         onClick={
-          ()=>{
+          async ()=>{
+            let instructions;
+            await buildInstruction(
+              tokenAdress.meta, 
+              amount, 
+              tokenAdress.mint, 
+              tokenAdress.decimals,
+            ).then(res => {
+              instructions = res;
+              console.log(res);
+            });
+
+            const info = [
+              {
+                'name': 'Metadata',
+                'content': tokenAdress.meta
+              }
+            ];
+            
+            setIns([...ins, {
+              name: 'Token Transaction',
+              type: 'TokenTransaction',
+              info,
+              instructions
+            }])
+            /*
             const info = [
               {
                 'name': 'Metadata',
@@ -68,7 +105,6 @@ export const TokenTransaction = (props) => {
               }
             ];
             const instruction = buildInstruction(tokenAdress);
-            /*
             setIns([...ins, {
               name: 'Token Transaction',
               type: 'TokenTransaction',
