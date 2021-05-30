@@ -69,11 +69,6 @@ export const CloseAccount = props => {
                 'name': 'Token Address',
                 'content': accountAdress.value
               },
-              ,
-              {
-                'name': 'Token Metadata',
-                'content': accountAdress.key
-              },
             ];
             const instruction = buildInstruction(accountAdress.key);
             setIns([...ins, {

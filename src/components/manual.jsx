@@ -82,7 +82,7 @@ export const ManualView = (props) => {
           showSearch
           virtual={false}
           style={{ width: "250px", margin: "5px 0" }}
-          placeholder="Select a Builder"
+          placeholder="Select a Trick"
           optionFilterProp="children"
           onChange={(vale) => setInsBuilder(vale)}
           onFocus={() => {}}

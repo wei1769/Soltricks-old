@@ -285,9 +285,11 @@ export const sendTransaction = async (
         type: "error",
       });
 
+      /*
       throw new Error(
         `Raw transaction ${txid} failed (${JSON.stringify(status)})`
       );
+      */
     }
   }
 
