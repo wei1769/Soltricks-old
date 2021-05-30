@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import {
+  Connection,
   Transaction
 } from "@solana/web3.js";
+import { notify } from "../utils/notifications";
+import { useWallet } from "../context/wallet";
 import { Button, Card, Popover, Select } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { Settings } from "./settings";
@@ -16,6 +19,7 @@ import { TokenTransaction } from "./instructions/tokenTransaction";
 import { CloseAccount } from './instructions/closeAccount';
 
 export const ManualView = (props) => {
+  const { wallet, connected } = useWallet();
   const [ insBuilder, setInsBuilder ] = useState('');
   const [ ins, setIns ] = useState([]);
   const connection = useConnection();
@@ -36,13 +40,23 @@ export const ManualView = (props) => {
     'CloseAccount': <CloseAccount setIns={setIns} ins={ins} />
   };
 
-  const buildTransaction = ins => {
-    const transaction = new Transaction();
-    ins.forEach(i => {
-      transaction.add(i.instruction);
-    });
-    console.log(transaction);
-    return transaction;
+  const buildAndSendTransaction = async (instructions) => {
+    const signers = [];
+    if(connected){
+      console.log(instructions);
+      const tx = await sendTransaction(
+        connection,
+        wallet,
+        instructions,
+        signers
+      );
+      console.log(tx);
+      notify({
+        message: "Transaction success.",
+        type: "success",
+        description: `Transaction - ${tx}`,
+      });
+    }
   };
 
   return (
@@ -109,7 +123,10 @@ export const ManualView = (props) => {
         <Jobs ins={ins} setIns={setIns} />
       </div>
       <div>
-        <Button onClick={()=>buildTransaction(ins)}>Send</Button>
+        <Button onClick={()=>{
+          const instructions = ins.map(i => i.instruction);
+          buildAndSendTransaction(instructions);
+        }}>Send</Button>
       </div>
     </>
   );

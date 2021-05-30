@@ -29,10 +29,15 @@ export const TokenSelect = props => {
       },new Map()));
     });
     console.log('TokenMap useEffect');
+    console.log(tokenMap);
   }, [setTokenMap]);
   useEffect(() => {
     fetchOwnerToken();
   },[connected, tokenMap]);
+
+  useEffect(() => {
+    fetchOwnerToken();
+  }, []);
 
   const fetchOwnerToken = () => {
     if(connected){
@@ -43,6 +48,7 @@ export const TokenSelect = props => {
         wallet.publicKey,
         filter
       ).then(vals => {
+        console.log(vals);
         const ownedTokenList = vals.value.map(val => {
           const {
               account: {
@@ -106,7 +112,11 @@ export const TokenSelect = props => {
           style={{ width: '90%', margin: '5px 0' }}
           placeholder={placeholder}
           optionFilterProp="children"
-          onChange={(vale) => setSelected(vale)}
+          onChange={(val, option) => {
+            console.log(option);
+            console.log(val);
+            setSelected(option);
+          }}
           onFocus={() => {}}
           onBlur={() => {}}
           onSearch={() => {}}

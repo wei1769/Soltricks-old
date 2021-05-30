@@ -11,7 +11,7 @@ import { TokenSelect } from '../TokenSelect';
 export const CloseAccount = props => {
   const { setIns, ins } = props;
   const connection = useConnection();
-  const [ accountAdress, setAccountAdress ] = useState('');
+  const [ accountAdress, setAccountAdress ] = useState({});
   const { wallet, connected } = useWallet();
   const { Title } = Typography;
 
@@ -43,11 +43,20 @@ export const CloseAccount = props => {
           ()=>{
             const info = [
               {
-                'name': 'Metadata',
-                'content': accountAdress
-              }
+                'name': 'Token Name',
+                'content': accountAdress.children
+              },
+              {
+                'name': 'Token Address',
+                'content': accountAdress.value
+              },
+              ,
+              {
+                'name': 'Token Metadata',
+                'content': accountAdress.key
+              },
             ];
-            const instruction = buildInstruction(accountAdress);
+            const instruction = buildInstruction(accountAdress.key);
             setIns([...ins, {
               name: 'Close Account',
               type: 'CloseAccount',

@@ -140,6 +140,7 @@ export function CurrencyPairProvider({ children = null as any }) {
   }, [mintAddressA, mintAddressB, tokens, location]);
 
   // updates browser history on token changes
+  /*
   useEffect(() => {
     // set history
     const base =
@@ -161,6 +162,7 @@ export function CurrencyPairProvider({ children = null as any }) {
       }
     }
   }, [mintAddressA, mintAddressB, tokens, history, location.pathname]);
+  */
 
   // Updates tokens on location change
   

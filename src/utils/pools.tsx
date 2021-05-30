@@ -606,7 +606,7 @@ export const usePools = () => {
         console.log('---info---');
         console.log(info);
         console.log('---info---');
-        const id = (info.accountId as unknown) as string;
+        const id = typeof info.accountId !== 'string' ? (info.accountId as unknown) as string : info.accountId;
         if (info.accountInfo.data.length === programIds().swapLayout.span) {
           const account = info.accountInfo;
           const updated = {
