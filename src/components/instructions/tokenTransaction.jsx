@@ -68,12 +68,14 @@ export const TokenTransaction = (props) => {
               }
             ];
             const instruction = buildInstruction(tokenAdress);
+            /*
             setIns([...ins, {
               name: 'Token Transaction',
               type: 'TokenTransaction',
               info,
               instruction
             }])
+            */
           }
         }
       >

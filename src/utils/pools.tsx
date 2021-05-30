@@ -599,6 +599,7 @@ export const usePools = () => {
     });
   }, [connection]);
 
+  /*
   useEffect(() => {
     const subID = connection.onProgramAccountChange(
       programIds().swap,
@@ -643,7 +644,7 @@ export const usePools = () => {
       connection.removeProgramAccountChangeListener(subID);
     };
   }, [connection, pools]);
-
+  */
   return { pools };
 };
 

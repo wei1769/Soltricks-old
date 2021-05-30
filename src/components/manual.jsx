@@ -121,11 +121,14 @@ export const ManualView = (props) => {
       >
         <Jobs ins={ins} setIns={setIns} />
       </div>
-      <div>
-        <Button onClick={()=>{
+      <div style={{display:'flex', justifyContent:'center'}}>
+        <Button style={{margin:'0.5rem'}} onClick={()=>{
           const instructions = ins.map(i => i.instruction);
           buildAndSendTransaction(instructions);
         }}>Send</Button>
+        <Button style={{margin:'0.5rem'}} onClick={()=>{
+          setIns([]);
+        }}>Clear</Button>
       </div>
     </>
   );
