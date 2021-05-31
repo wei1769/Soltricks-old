@@ -15,7 +15,7 @@ import {
   useConnectionConfig,
 } from "../utils/connection";
 import { Jobs } from './jobs/jobs';
-import { TokenTransaction } from "./instructions/tokenTransaction";
+import { TokenTransfer } from "./instructions/tokenTransfer";
 import { CloseAccount } from './instructions/closeAccount';
 
 export const ManualView = (props) => {
@@ -27,8 +27,8 @@ export const ManualView = (props) => {
   const { Option } = Select;
   const instructionList = [
     {
-      name: 'Token Transaction',
-      value: 'TokenTransaction'
+      name: 'Token Transfer',
+      value: 'TokenTransfer'
     },
     { 
       name:'Close Account',
@@ -36,7 +36,7 @@ export const ManualView = (props) => {
     }
   ];
   const instructions = {
-    'TokenTransaction': <TokenTransaction setIns={setIns} ins={ins} />,
+    'TokenTransfer': <TokenTransfer setIns={setIns} ins={ins} />,
     'CloseAccount': <CloseAccount setIns={setIns} ins={ins} />
   };
 

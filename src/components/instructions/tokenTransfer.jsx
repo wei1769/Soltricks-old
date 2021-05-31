@@ -10,7 +10,7 @@ import { TokenSelect } from "../TokenSelect";
 import { transferChecked, closeAccount } from "../../utils/layout";
 import { transferTokenCheck } from "../../utils/token";
 
-export const TokenTransaction = (props) => {
+export const TokenTransfer = (props) => {
   const { setIns, ins } = props;
   const connection = useConnection();
   const { wallet, connected } = useWallet();
