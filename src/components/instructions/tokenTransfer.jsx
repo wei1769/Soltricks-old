@@ -86,9 +86,13 @@ export const TokenTransfer = (props) => {
 
             const info = [
               {
-                'name': 'Metadata',
-                'content': tokenAdress.meta
-              }
+                'name': 'Token Name',
+                'content': tokenAdress.label
+              },
+              {
+                'name': 'Recipient',
+                'content': address
+              },
             ];
             
             setIns([...ins, {
@@ -97,21 +101,6 @@ export const TokenTransfer = (props) => {
               info,
               instructions
             }])
-            /*
-            const info = [
-              {
-                'name': 'Metadata',
-                'content': tokenAdress
-              }
-            ];
-            const instruction = buildInstruction(tokenAdress);
-            setIns([...ins, {
-              name: 'Token Transaction',
-              type: 'TokenTransaction',
-              info,
-              instruction
-            }])
-            */
           }
         }
       >
