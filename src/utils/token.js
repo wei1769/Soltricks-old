@@ -216,6 +216,8 @@ export const transferTokenCheck = async ({
       type: "error",
       description: `Cannot send to address with zero SOL balances`,
     });
+
+    return [];
   }
 
   const destinationSplTokenAccount = (

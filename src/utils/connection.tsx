@@ -238,7 +238,8 @@ export const sendTransaction = async (
   wallet: any,
   instructions: TransactionInstruction[],
   signers: Account[],
-  awaitConfirmation = true
+  awaitConfirmation = true,
+  callback = Function()
 ) => {
   let transaction = new Transaction();
   instructions.forEach((instruction) => transaction.add(instruction));
@@ -260,7 +261,15 @@ export const sendTransaction = async (
     commitment: "singleGossip",
   };
 
+  callback(true);
   const txid = await connection.sendRawTransaction(rawTransaction, options);
+  notify({
+    message: "Transaction sending...",
+    description: (
+        <ExplorerLink address={txid} type="transaction" />
+    ),
+    type: "info",
+  });
 
   if (awaitConfirmation) {
     const status = (
@@ -290,8 +299,17 @@ export const sendTransaction = async (
         `Raw transaction ${txid} failed (${JSON.stringify(status)})`
       );
       */
+    }else{
+      notify({
+        message: "Transaction success",
+        description: (
+            <ExplorerLink address={txid} type="transaction" />
+        ),
+        type: "success",
+      });
     }
   }
 
+  callback(false);
   return txid;
 };

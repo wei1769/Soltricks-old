@@ -21,7 +21,7 @@ export function notify({
     description = <></>;
   }
   (notification as any)[type]({
-    duration: 6,
+    duration: 7,
     message: <span style={{ color: "black" }}>{message}</span>,
     description: (
       <span style={{ color: "black", opacity: 0.5 }}>{description}</span>

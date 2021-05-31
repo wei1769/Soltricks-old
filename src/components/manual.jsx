@@ -5,7 +5,7 @@ import {
 } from "@solana/web3.js";
 import { notify } from "../utils/notifications";
 import { useWallet } from "../context/wallet";
-import { Button, Card, Popover, Select } from "antd";
+import { Button, Card, Popover, Select, Spin } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { Settings } from "./settings";
 import { AppBar } from "./appBar";
@@ -21,6 +21,7 @@ import { CloseAccount } from './instructions/closeAccount';
 export const ManualView = (props) => {
   const { wallet, connected } = useWallet();
   const [ insBuilder, setInsBuilder ] = useState('');
+  const [ sending, setSending ] = useState(false);
   const [ ins, setIns ] = useState([]);
   const connection = useConnection();
   const connectionConfig = useConnectionConfig();
@@ -48,13 +49,10 @@ export const ManualView = (props) => {
         connection,
         wallet,
         instructions,
-        signers
+        signers,
+        true,
+        setSending
       );
-      notify({
-        message: "Transaction success.",
-        type: "success",
-        description: `Transaction - ${tx}`,
-      });
     }
   };
 
@@ -100,7 +98,7 @@ export const ManualView = (props) => {
             );
           })}
         </Select>
-        <div style={{margin: '2rem'}}>
+        <div style={{ margin: "2rem" }}>
           <Card
             className="exchange-card"
             headStyle={{ padding: 0 }}
@@ -121,17 +119,31 @@ export const ManualView = (props) => {
       >
         <Jobs ins={ins} setIns={setIns} />
       </div>
-      <div style={{display:'flex', justifyContent:'center'}}>
-        <Button style={{margin:'0.5rem'}} onClick={()=>{
-          const instructions = ins.map(i => i.instructions);
-          const flattenIns = [].concat.apply([], instructions);
-          console.log(flattenIns);
-          buildAndSendTransaction(flattenIns);
-        }}>Send</Button>
-        <Button style={{margin:'0.5rem'}} onClick={()=>{
-          setIns([]);
-        }}>Clear</Button>
-      </div>
+      <Spin tip="Sending..." spinning={sending}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            style={{ margin: "0.5rem" }}
+            onClick={() => {
+              const instructions = ins.map((i) => i.instructions);
+              const flattenIns = [].concat.apply([], instructions);
+              console.log(flattenIns);
+              buildAndSendTransaction(flattenIns).then(res => {
+                console.log(res);
+              });
+            }}
+          >
+            Send
+          </Button>
+          <Button
+            style={{ margin: "0.5rem" }}
+            onClick={() => {
+              setIns([]);
+            }}
+          >
+            Clear
+          </Button>
+        </div>
+      </Spin>
     </>
   );
 };
