@@ -167,7 +167,7 @@ const createAndTransferToAccountIx = async (
     source: sourcePublicKey, 
     mint, 
     destination: newAddress, 
-    amount: finalAmount, 
+    amount, 
     decimals, 
     owner 
   });
