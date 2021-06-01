@@ -46,7 +46,7 @@ export const TokenTransfer = (props) => {
         alignItems: "center",
       }}
     >
-      <Title level={4}>Token Transaction</Title>
+      <Title level={4}>Token Transfer</Title>
       <TokenSelect 
         setSelected={setTokenAdress}
         placeholder={'Select a Token'}
@@ -96,8 +96,8 @@ export const TokenTransfer = (props) => {
             ];
             
             setIns([...ins, {
-              name: 'Token Transaction',
-              type: 'TokenTransaction',
+              name: 'Token Transfer',
+              type: 'TokenTransfer',
               info,
               instructions
             }])
