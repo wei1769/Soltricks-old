@@ -51,7 +51,7 @@ export const ManualView = (props) => {
         instructions,
         signers,
         true,
-        setSending
+        [setSending, setIns]
       );
     }
   };

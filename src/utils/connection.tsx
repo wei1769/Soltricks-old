@@ -239,7 +239,8 @@ export const sendTransaction = async (
   instructions: TransactionInstruction[],
   signers: Account[],
   awaitConfirmation = true,
-  callback = Function()
+  setSending = Function(),
+  setIns = Function() 
 ) => {
   let transaction = new Transaction();
   instructions.forEach((instruction) => transaction.add(instruction));
@@ -261,7 +262,7 @@ export const sendTransaction = async (
     commitment: "singleGossip",
   };
 
-  callback(true);
+  setSending(true);
   const txid = await connection.sendRawTransaction(rawTransaction, options);
   notify({
     message: "Transaction sending...",
@@ -300,6 +301,7 @@ export const sendTransaction = async (
       );
       */
     }else{
+      setIns([]);
       notify({
         message: "Transaction success",
         description: (
@@ -310,6 +312,6 @@ export const sendTransaction = async (
     }
   }
 
-  callback(false);
+  setSending(false);
   return txid;
 };
