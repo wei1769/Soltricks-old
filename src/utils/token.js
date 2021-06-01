@@ -36,7 +36,7 @@ const findAssociatedTokenAddress = async (
   )[0];
 };
 
-const createAssociatedTokenAccountIx = async (
+export const createAssociatedTokenAccountIx = async (
   fundingAddress,
   walletAddress,
   splTokenMintAddress,

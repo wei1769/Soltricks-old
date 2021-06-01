@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   PublicKey,
 } from "@solana/web3.js";
-import { useConnection, useConnectionConfig } from "../../utils/connection";
+import { useConnection} from "../../utils/connection";
 import { useWallet } from "../../context/wallet";
-import { Button, Card, Input, Typography } from "antd";
+import { Button, Input, Typography } from "antd";
 import { NumericInput } from "../numericInput";
 import { TokenSelect } from "../TokenSelect";
-import { transferChecked, closeAccount } from "../../utils/layout";
 import { transferTokenCheck } from "../../utils/token";
 
 export const TokenTransfer = (props) => {

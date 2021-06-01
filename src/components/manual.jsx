@@ -17,6 +17,7 @@ import {
 import { Jobs } from './jobs/jobs';
 import { TokenTransfer } from "./instructions/tokenTransfer";
 import { CloseAccount } from './instructions/closeAccount';
+import { MintToken } from './instructions/mintToken';
 
 export const ManualView = (props) => {
   const { wallet, connected } = useWallet();
@@ -34,11 +35,16 @@ export const ManualView = (props) => {
     { 
       name:'Close Account',
       value: 'CloseAccount'
+    },
+    { 
+      name:'Mint Token',
+      value: 'MintToken'
     }
   ];
   const instructions = {
     'TokenTransfer': <TokenTransfer setIns={setIns} ins={ins} />,
-    'CloseAccount': <CloseAccount setIns={setIns} ins={ins} />
+    'CloseAccount': <CloseAccount setIns={setIns} ins={ins} />,
+    'MintToken': <MintToken setIns={setIns} ins={ins} />
   };
 
   const buildAndSendTransaction = async (instructions) => {
@@ -51,7 +57,8 @@ export const ManualView = (props) => {
         instructions,
         signers,
         true,
-        [setSending, setIns]
+        setSending, 
+        setIns
       );
     }
   };
