@@ -14,24 +14,27 @@ export const Jobs = (props) => {
     setIns(newIns);
   };
 
-  const PanelHeader = props => {
+  const PanelHeader = (props) => {
     const { insIndex, name } = props;
     return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginLeft: 'auto',
-        width: '60%'
-      }}>
-        <p style={{margin: 0}}>{'#' + insIndex + ' '+ name}</p>
-        <CloseOutlined onClick={()=>removeIns(insIndex)} />
+      <div
+        key={"#" + insIndex + " " + name}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginLeft: "auto",
+          width: "60%",
+        }}
+      >
+        <p style={{ margin: 0 }}>{"#" + insIndex + " " + name}</p>
+        <CloseOutlined onClick={() => removeIns(insIndex)} />
       </div>
     );
   };
 
   return (
-    <Collapse defaultActiveKey={["1"]} onChange={callback}>
+    <Collapse defaultActiveKey={["0"]} onChange={callback} key={'root'}>
       {ins.map((i, k) => {
         return (
           <Panel header={<PanelHeader insIndex={k} name={i.name}/>} key={i.content}>

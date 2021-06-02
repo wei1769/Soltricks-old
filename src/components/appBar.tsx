@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, Menu } from "antd";
+import Logo from "./soltricks.png";
 import { useWallet } from "../context/wallet";
 import { AccountInfo } from "./accountInfo";
 import { WalletConnect } from "./walletConnect";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 export const AppBar = (props: { left?: JSX.Element; right?: JSX.Element }) => {
   const { connected } = useWallet();
@@ -13,7 +13,7 @@ export const AppBar = (props: { left?: JSX.Element; right?: JSX.Element }) => {
   const TopBar = (
     <div className="App-Bar">
       <div className="App-Bar-left">
-        <div className="App-logo" />
+        <div className="App-logo" style={{backgroundImage: `url(${Logo})`}} />
         {props.left}
       </div>
       <div className="App-Bar-right">

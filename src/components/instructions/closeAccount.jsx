@@ -21,8 +21,39 @@ export const CloseAccount = props => {
     const  destination = wallet.publicKey;
     const  owner = wallet.publicKey;
     
-    return [closeAccount({ source, destination, owner })];
+    return closeAccount({ source, destination, owner });
   };
+
+  const buildInstructions = (accounts) => {
+    const instructions = [];
+    const notEmpty = [];
+    accounts.forEach((account, i) => {
+      const emptyAccount = checkAmount(account.label); 
+      if(!emptyAccount){
+        notEmpty.push(i);
+      }
+
+      const info = [
+        {
+          'name': 'Token Name',
+          'content': account.label
+        },
+        {
+          'name': 'Token Address',
+          'content': account.meta
+        },
+      ];
+      const instruction = buildInstruction(account.meta);
+      instructions.push({
+        name: 'Close Account',
+        type: 'CloseAccount',
+        info,
+        instructions: [instruction]
+      });
+    });
+
+    return instructions;
+  }
 
   const checkAmount = txt => {
     let newTxt = txt.split('(');
@@ -47,36 +78,14 @@ export const CloseAccount = props => {
         setSelected={setAccountAdress}
         placeholder={'Select a Account'}
         valueType='meta'
+        selectMode='multiple'
       />
       <Button 
         style={{ margin: "1rem 0" }}
         onClick={
           ()=>{
-            const emptyAccount = checkAmount(accountAdress.label);
-            if(!emptyAccount){
-              notify({
-                message: "Not empty account",
-                description: "Please aware if close not empty account will cause transaction fail.",
-                type: "warn",
-              });
-            }
-            const info = [
-              {
-                'name': 'Token Name',
-                'content': accountAdress.label
-              },
-              {
-                'name': 'Token Address',
-                'content': accountAdress.meta
-              },
-            ];
-            const instructions = buildInstruction(accountAdress.meta);
-            setIns([...ins, {
-              name: 'Close Account',
-              type: 'CloseAccount',
-              info,
-              instructions
-            }])
+            const instructions = buildInstructions(accountAdress);
+            setIns([...ins, ...instructions]);
           }
         }
       >
