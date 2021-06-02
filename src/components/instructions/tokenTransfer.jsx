@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
+import bs58 from "bs58";
 import {
   PublicKey,
 } from "@solana/web3.js";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { useConnection} from "../../utils/connection";
 import { useWallet } from "../../context/wallet";
-import { Button, Input, Typography } from "antd";
+import { Button, Input, Typography, Tooltip } from "antd";
 import { NumericInput } from "../numericInput";
 import { TokenSelect } from "../TokenSelect";
 import { transferTokenCheck } from "../../utils/token";
+import { notify } from "../../utils/notifications";
 
 export const TokenTransfer = (props) => {
   const { setIns, ins } = props;
@@ -18,12 +21,12 @@ export const TokenTransfer = (props) => {
   const [tokenAdress, setTokenAdress] = useState({});
   const { Title } = Typography;
 
-  const buildInstruction = async (source, amount, mint, decimals, overrideDestinationCheck = false) => {
+  const buildInstruction = async (source, amount, mint, decimals, address, overrideDestinationCheck = false) => {
     const sourcePublicKey = new PublicKey(source);
     const destinationPublicKey = new PublicKey(address);
     const owner = wallet.publicKey;
     console.log(owner);
-    const instructions = transferTokenCheck({
+    const instructions = await transferTokenCheck({
       connection,
       owner,
       sourcePublicKey,
@@ -32,8 +35,58 @@ export const TokenTransfer = (props) => {
       mint: new PublicKey(mint),
       decimals,
       overrideDestinationCheck,
-    })
+    });
+
+    const info = [
+      {
+        'name': 'Token Name',
+        'content': tokenAdress.label
+      },
+      {
+        'name': 'Recipient',
+        'content': address
+      },
+    ];
     
+    return {
+      name: 'Token Transfer',
+      type: 'TokenTransfer',
+      info,
+      instructions
+    };
+  };
+
+  const checkMultiAddress = async (addressInput) => {
+    const splitAddress = addressInput.split(",");
+    const instructions = [];
+    const errorAddress = [];
+    for (let k = 0; k < splitAddress.length; k += 1) {
+      const decodeAddress = bs58.decode(splitAddress[k].trim());
+      console.log(decodeAddress.length);
+      if (decodeAddress.length == 32) {
+        await buildInstruction(
+          tokenAdress.meta,
+          amount,
+          tokenAdress.mint,
+          tokenAdress.decimals,
+          splitAddress[k].trim()
+        ).then((res) => {
+          console.log(res);
+          instructions.push(res);
+        });
+      }else{
+        errorAddress.push(k+1);
+      }
+    }
+
+    if(errorAddress.length > 0){
+      const errorMessage = errorAddress.join() + " adress is invalid"
+      notify({
+        message: "Wrong Address format...",
+        description: errorMessage,
+        type: "warn",
+      });
+    }
     return instructions;
   };
 
@@ -46,21 +99,32 @@ export const TokenTransfer = (props) => {
       }}
     >
       <Title level={4}>Token Transfer</Title>
-      <TokenSelect 
+      <TokenSelect
         setSelected={setTokenAdress}
-        placeholder={'Select a Token'}
-        valueType='mint'
+        placeholder={"Select a Token"}
+        valueType="mint"
       />
-      <Input
-        placeholder="Recipient's Address"
-        style={{ margin: "5px 0" }}
-        value={address}
-        onChange={e => {
-          const val = e.target.value;
-          setAddress(val);
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "95%",
         }}
-        onBlur={() => {}}
-      />
+      >
+        <Input
+          placeholder="Recipient's Address"
+          style={{ margin: "5px 0", marginRight: "0.5rem" }}
+          value={address}
+          onChange={(e) => {
+            const val = e.target.value;
+            setAddress(val);
+          }}
+          onBlur={() => {}}
+        />
+        <Tooltip title="You can fill multiple address and use comma to separate it!">
+          <InfoCircleOutlined />
+        </Tooltip>
+      </div>
       <NumericInput
         value={amount}
         style={{ margin: "5px 0" }}
@@ -70,38 +134,11 @@ export const TokenTransfer = (props) => {
       />
       <Button
         style={{ margin: "1rem 0" }}
-        onClick={
-          async ()=>{
-            let instructions;
-            await buildInstruction(
-              tokenAdress.meta, 
-              amount, 
-              tokenAdress.mint, 
-              tokenAdress.decimals,
-            ).then(res => {
-              instructions = res;
-              console.log(res);
-            });
-
-            const info = [
-              {
-                'name': 'Token Name',
-                'content': tokenAdress.label
-              },
-              {
-                'name': 'Recipient',
-                'content': address
-              },
-            ];
-            
-            setIns([...ins, {
-              name: 'Token Transfer',
-              type: 'TokenTransfer',
-              info,
-              instructions
-            }])
-          }
-        }
+        onClick={async () => {
+          let instructions;
+          instructions = await checkMultiAddress(address);
+          setIns([...ins, ...instructions]);
+        }}
       >
         Add Instruction
       </Button>

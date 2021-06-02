@@ -20,6 +20,15 @@ export const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
   'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
 );
 
+const checkSPLaddress  = address => {
+  const decodeAddress = bs58.decode(address);
+  if(decodeAddress !== 32){
+    return false;
+  }
+
+  return true;
+}
+
 const findAssociatedTokenAddress = async (
   walletAddress,
   tokenMintAddress,
