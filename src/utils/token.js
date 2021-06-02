@@ -29,7 +29,7 @@ const checkSPLaddress  = address => {
   return true;
 }
 
-const findAssociatedTokenAddress = async (
+export const findAssociatedTokenAddress = async (
   walletAddress,
   tokenMintAddress,
 ) => {

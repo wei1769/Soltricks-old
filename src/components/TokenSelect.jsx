@@ -5,11 +5,12 @@ import {
   PublicKey,
 } from "@solana/web3.js";
 import { useWallet } from "../context/wallet";
+import { findAssociatedTokenAddress } from "../utils/token";
 import { Select } from "antd";
 
 export const TokenSelect = props => {
   const { setSelected, placeholder, valueType } = props;
-  const { Option } = Select;
+  const { Option, OptGroup } = Select;
   const { wallet, connected } = useWallet();
   const [ ownedTokens, setOwnedTokens ] = useState([]);
   const [ tokenMap, setTokenMap ] = useState(new Map);
@@ -28,8 +29,6 @@ export const TokenSelect = props => {
         return map;
       },new Map()));
     });
-    console.log('TokenMap useEffect');
-    console.log(tokenMap);
   }, [setTokenMap]);
   useEffect(() => {
     fetchOwnerToken();
@@ -39,7 +38,7 @@ export const TokenSelect = props => {
     fetchOwnerToken();
   }, []);
 
-  const fetchOwnerToken = () => {
+  const fetchOwnerToken = async () => {
     if(connected){
       const filter = {
         programId: TOKEN_PROGRAM_ID
@@ -47,26 +46,28 @@ export const TokenSelect = props => {
       connection.getParsedTokenAccountsByOwner(
         wallet.publicKey,
         filter
-      ).then(vals => {
-        console.log(vals);
-        const ownedTokenList = vals.value.map(val => {
+      ).then( async vals => {
+        const ownedTokenList = [];
+        
+        for (let k = 0; k < vals.value.length; k += 1) {
           const {
-              account: {
-                data: {
-                  parsed: {
-                    info
-                  }
-                }
+            account: {
+              data: {
+                parsed: { info },
               },
-              pubkey: meta
-          } = val;
-          return {
+            },
+            pubkey: meta,
+          } = vals.value[k];
+          const mintPublicKey = new PublicKey(info.mint);
+          const associatedToken = await findAssociatedTokenAddress(wallet.publicKey, mintPublicKey);
+          ownedTokenList.push({
             mint: info.mint,
             amount: info.tokenAmount.uiAmountString,
             meta: meta.toString(),
-            decimals: info.tokenAmount.decimals
-          };
-        });
+            decimals: info.tokenAmount.decimals,
+            isAssociatedToken: meta.equals(associatedToken)
+          });
+        }
         const tokens = ownedTokenList.map(ownedToken => {
           const temp = tokenMap.get(ownedToken.mint);
           if(temp === undefined){
@@ -87,7 +88,8 @@ export const TokenSelect = props => {
               amount: ownedToken.amount,
               label: label + '(' + ownedToken.amount + ')',
               meta: ownedToken.meta,
-              decimals: ownedToken.decimals
+              decimals: ownedToken.decimals,
+              isAssociatedToken: ownedToken.isAssociatedToken
             };
           }else{
             return {
@@ -98,7 +100,8 @@ export const TokenSelect = props => {
               amount: ownedToken.amount,
               label: temp.name + '(' + ownedToken.amount + ')',
               meta: ownedToken.meta,
-              decimals: ownedToken.decimals
+              decimals: ownedToken.decimals,
+              isAssociatedToken: ownedToken.isAssociatedToken
             };
           }
         });
@@ -128,11 +131,20 @@ export const TokenSelect = props => {
             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
           }
         >
+          <OptGroup label="Normal token account">
           {
-            ownedTokens.map( token => {
+            ownedTokens.filter( token => !token.isAssociatedToken ).map( token => {
               return <Option key={token.meta} value={token[valueType]}>{token.label}</Option>;
             })
           }
+          </OptGroup>
+          <OptGroup label="Associated token account">
+          {
+            ownedTokens.filter( token => token.isAssociatedToken ).map( token => {
+              return <Option key={token.meta} value={token[valueType]}>{token.label}</Option>;
+            })
+          }
+          </OptGroup>
         </Select>
   );
 };
