@@ -221,12 +221,21 @@ export const transferTokenCheck = async ({
     !overrideDestinationCheck
   ) {
     notify({
-      message: "Transaction fail.",
-      type: "error",
-      description: `Cannot send to address with zero SOL balances`,
+      message: "Address with zero SOL balances.",
+      type: "warn",
+      description: `Send with zero SOL balances may cause fail transaction`,
+    });
+    let finalAmount = Math.round(parseFloat(amount) * 10 ** decimals);
+    const transferIx =  transferChecked({ 
+      source: sourcePublicKey, 
+      mint, 
+      destination: destinationPublicKey, 
+      amount: finalAmount, 
+      decimals, 
+      owner 
     });
 
-    return [];
+    return [transferIx];
   }
 
   const destinationSplTokenAccount = (
