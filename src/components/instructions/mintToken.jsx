@@ -26,6 +26,12 @@ export const MintToken = (props) => {
       newTokenAddress: newAddress,
     };
   };
+  useEffect(()=>{
+    if(connected){
+      const ownPublicKey = wallet.publicKey;
+      setDesAddress(ownPublicKey.toString());
+    }
+  }, []);
 
   return (
     <>

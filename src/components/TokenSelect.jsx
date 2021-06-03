@@ -8,7 +8,7 @@ import { Select, Spin } from "antd";
 import { ReloadOutlined, LoadingOutlined } from "@ant-design/icons";
 
 export const TokenSelect = (props) => {
-  const { setSelected, placeholder, valueType, selectMode } = props;
+  const { setSelected, placeholder, valueType, selectMode, selected } = props;
   const { Option, OptGroup } = Select;
   const { wallet, connected } = useWallet();
   const [ownedTokens, setOwnedTokens] = useState([]);
@@ -97,6 +97,7 @@ export const TokenSelect = (props) => {
                 logo: "",
                 amount: ownedToken.amount,
                 label: label + "(" + ownedToken.amount + ")",
+                value: ownedToken.mint,
                 meta: ownedToken.meta,
                 decimals: ownedToken.decimals,
                 isAssociatedToken: ownedToken.isAssociatedToken,
@@ -109,6 +110,7 @@ export const TokenSelect = (props) => {
                 logo: temp.logoURI,
                 amount: ownedToken.amount,
                 label: temp.name + "(" + ownedToken.amount + ")",
+                value: ownedToken.mint,
                 meta: ownedToken.meta,
                 decimals: ownedToken.decimals,
                 isAssociatedToken: ownedToken.isAssociatedToken,
@@ -118,20 +120,24 @@ export const TokenSelect = (props) => {
           setOwnedTokens(tokens);
           console.log(tokens);
         });
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%'
-    }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+      }}
+    >
       <Spin indicator={loadingIcon} spinning={false}>
         <Select
           mode={selectMode}
+          value={selected}
+          labelInValue
           showSearch
           virtual={false}
           style={{ width: "25rem", margin: "5px 0.5rem" }}
@@ -139,27 +145,31 @@ export const TokenSelect = (props) => {
           optionFilterProp="children"
           onChange={(val, option) => {
             if (selectMode == "multiple") {
-              const value = option.map((o) => {
-                const tokenInfo = ownedTokens.filter((token) => {
-                  return token.meta == o.key;
+              const value = option
+                .map((o) => {
+                  const tokenInfo = ownedTokens.filter((token) => {
+                    return token.meta == o.key;
+                  });
+
+                  return tokenInfo[0];
+                })
+                .filter((token) => {
+                  return token !== undefined;
                 });
 
-                return tokenInfo[0];
-              });
-              setSelected(value);
+              setSelected([...selected, ...value]);
             } else {
               const value = ownedTokens.filter((token) => {
                 return token.meta == option.key;
               });
+              console.log(value[0]);
               setSelected(value[0]);
             }
           }}
           onFocus={() => {}}
           onBlur={() => {}}
           onSearch={() => {}}
-          filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }
+          filterOption={true}
         >
           <OptGroup label="Normal token account">
             {ownedTokens
@@ -185,7 +195,10 @@ export const TokenSelect = (props) => {
           </OptGroup>
         </Select>
       </Spin>
-      <ReloadOutlined style={{display: loading?'none':'inherit'}} onClick={()=> fetchOwnerToken()}/>
+      <ReloadOutlined
+        style={{ display: loading ? "none" : "inherit" }}
+        onClick={() => fetchOwnerToken()}
+      />
     </div>
   );
 };

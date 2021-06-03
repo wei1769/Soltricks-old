@@ -18,14 +18,13 @@ export const TokenTransfer = (props) => {
   const { wallet, connected } = useWallet();
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
-  const [tokenAdress, setTokenAdress] = useState({});
+  const [tokenAddress, settokenAddress] = useState(undefined);
   const { Title } = Typography;
 
   const buildInstruction = async (source, amount, mint, decimals, address, overrideDestinationCheck = false) => {
     const sourcePublicKey = new PublicKey(source);
     const destinationPublicKey = new PublicKey(address);
     const owner = wallet.publicKey;
-    console.log(owner);
     const instructions = await transferTokenCheck({
       connection,
       owner,
@@ -40,7 +39,7 @@ export const TokenTransfer = (props) => {
     const info = [
       {
         'name': 'Token Name',
-        'content': tokenAdress.label
+        'content': tokenAddress.label
       },
       {
         'name': 'Recipient',
@@ -65,10 +64,10 @@ export const TokenTransfer = (props) => {
       console.log(decodeAddress.length);
       if (decodeAddress.length == 32) {
         await buildInstruction(
-          tokenAdress.meta,
+          tokenAddress.meta,
           amount,
-          tokenAdress.mint,
-          tokenAdress.decimals,
+          tokenAddress.mint,
+          tokenAddress.decimals,
           splitAddress[k].trim()
         ).then((res) => {
           console.log(res);
@@ -100,8 +99,9 @@ export const TokenTransfer = (props) => {
     >
       <Title level={4}>Token Transfer</Title>
       <TokenSelect
-        setSelected={setTokenAdress}
+        setSelected={settokenAddress}
         placeholder={"Select a Token"}
+        selected={tokenAddress}
         valueType="mint"
       />
       <div
@@ -136,8 +136,11 @@ export const TokenTransfer = (props) => {
         style={{ margin: "1rem 0" }}
         onClick={async () => {
           let instructions;
-          instructions = await checkMultiAddress(address);
-          setIns([...ins, ...instructions]);
+          if (tokenAddress !== undefined) {
+            instructions = await checkMultiAddress(address);
+            setIns([...ins, ...instructions]);
+            settokenAddress(undefined);
+          }
         }}
       >
         Add Instruction
