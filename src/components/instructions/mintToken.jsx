@@ -44,7 +44,7 @@ export const MintToken = (props) => {
       >
         <Title level={4}>Mint Token</Title>
         <Input
-          placeholder="Destination Address"
+          placeholder="Owner Address"
           style={{ margin: "5px 0" }}
           value={desAddress}
           onChange={(e) => {
