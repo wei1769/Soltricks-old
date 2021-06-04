@@ -34,7 +34,7 @@ export const ManualView = (props) => {
       value: "CloseAccount",
     },
     {
-      name: "Mint Token",
+      name: "Create Token Account",
       value: "MintToken",
     },
   ];
