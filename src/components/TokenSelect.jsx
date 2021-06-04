@@ -118,6 +118,7 @@ export const TokenSelect = (props) => {
             }
           });
           setOwnedTokens(tokens);
+          console.log(tokens);
         });
       setLoading(false);
     }
@@ -151,6 +152,7 @@ export const TokenSelect = (props) => {
             */
           }}
           onChange={(val, option) => {
+            console.log(val);
             if (selectMode == "multiple") {
               const value = option
                 .map((o) => {
@@ -182,10 +184,9 @@ export const TokenSelect = (props) => {
             {ownedTokens
               .filter((token) => !token.isAssociatedToken)
               .map((token) => {
-                console.log(token[valueType]);
                 console.log(token);
                 return (
-                  <Option key={token.meta} value={token[valueType]}>
+                  <Option key={token.meta} value={token.meta}>
                     {token.label}
                   </Option>
                 );
@@ -195,8 +196,9 @@ export const TokenSelect = (props) => {
             {ownedTokens
               .filter((token) => token.isAssociatedToken)
               .map((token) => {
+                console.log(token);
                 return (
-                  <Option key={token.meta} value={token[valueType]}>
+                  <Option key={token.meta} value={token.meta}>
                     {token.label}
                   </Option>
                 );

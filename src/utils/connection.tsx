@@ -279,6 +279,7 @@ export const sendTransaction = async (
         options && (options.commitment as any)
       )
     ).value;
+    console.log(status);
 
     if (status?.err) {
       const errors = await getErrorForTransaction(connection, txid);
