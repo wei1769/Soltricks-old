@@ -42,7 +42,7 @@ export const MintToken = (props) => {
           alignItems: "center",
         }}
       >
-        <Title level={4}>Mint Token</Title>
+        <Title level={4}>Create Token Account</Title>
         <Input
           placeholder="Owner Address"
           style={{ margin: "5px 0" }}
