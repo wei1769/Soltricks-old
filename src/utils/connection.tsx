@@ -282,6 +282,7 @@ export const sendTransaction = async (
 
     if (status?.err) {
       const errors = await getErrorForTransaction(connection, txid);
+      setSending(false);
       notify({
         message: "Transaction failed...",
         description: (
@@ -302,6 +303,7 @@ export const sendTransaction = async (
       */
     }else{
       setIns([]);
+      setSending(false);
       notify({
         message: "Transaction success",
         description: (

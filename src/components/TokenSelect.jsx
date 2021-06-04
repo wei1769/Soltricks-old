@@ -97,7 +97,7 @@ export const TokenSelect = (props) => {
                 logo: "",
                 amount: ownedToken.amount,
                 label: label + "(" + ownedToken.amount + ")",
-                value: ownedToken.mint,
+                value: ownedToken[valueType],
                 meta: ownedToken.meta,
                 decimals: ownedToken.decimals,
                 isAssociatedToken: ownedToken.isAssociatedToken,
@@ -110,7 +110,7 @@ export const TokenSelect = (props) => {
                 logo: temp.logoURI,
                 amount: ownedToken.amount,
                 label: temp.name + "(" + ownedToken.amount + ")",
-                value: ownedToken.mint,
+                value: ownedToken[valueType],
                 meta: ownedToken.meta,
                 decimals: ownedToken.decimals,
                 isAssociatedToken: ownedToken.isAssociatedToken,
@@ -118,7 +118,6 @@ export const TokenSelect = (props) => {
             }
           });
           setOwnedTokens(tokens);
-          console.log(tokens);
         });
       setLoading(false);
     }
@@ -143,6 +142,14 @@ export const TokenSelect = (props) => {
           style={{ width: "25rem", margin: "5px 0.5rem" }}
           placeholder={placeholder}
           optionFilterProp="children"
+          onDeselect={(deselect) => {
+            /*
+            const newSelected = selected.filter(s => {
+              return s[valueType] != deselect.value;
+            });
+            setSelected(newSelected);
+            */
+          }}
           onChange={(val, option) => {
             if (selectMode == "multiple") {
               const value = option
@@ -156,13 +163,13 @@ export const TokenSelect = (props) => {
                 .filter((token) => {
                   return token !== undefined;
                 });
+              console.log(value);
 
-              setSelected([...selected, ...value]);
+              setSelected([...value]);
             } else {
               const value = ownedTokens.filter((token) => {
                 return token.meta == option.key;
               });
-              console.log(value[0]);
               setSelected(value[0]);
             }
           }}
@@ -175,6 +182,8 @@ export const TokenSelect = (props) => {
             {ownedTokens
               .filter((token) => !token.isAssociatedToken)
               .map((token) => {
+                console.log(token[valueType]);
+                console.log(token);
                 return (
                   <Option key={token.meta} value={token[valueType]}>
                     {token.label}

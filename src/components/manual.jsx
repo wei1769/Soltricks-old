@@ -50,6 +50,7 @@ export const ManualView = (props) => {
   const buildAndSendTransaction = async (instructions) => {
     const signers = [];
     console.log(instructions);
+    
     if(connected){
       const tx = await sendTransaction(
         connection,
