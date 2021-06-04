@@ -226,6 +226,16 @@ export const transferTokenCheck = async ({
       description: `Send with zero SOL balances may cause fail transaction`,
     });
     let finalAmount = Math.round(parseFloat(amount) * 10 ** decimals);
+
+    /*
+    return await createAndTransferToAccountIx(
+      owner,
+      sourcePublicKey,
+      destinationPublicKey,
+      finalAmount,
+      mint,
+      decimals
+    );
     const transferIx =  transferChecked({ 
       source: sourcePublicKey, 
       mint, 
@@ -236,6 +246,7 @@ export const transferTokenCheck = async ({
     });
 
     return [transferIx];
+    */
   }
 
   const destinationSplTokenAccount = (

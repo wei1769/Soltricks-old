@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import {
-  Connection,
-  Transaction
-} from "@solana/web3.js";
+import { Connection, Transaction } from "@solana/web3.js";
 import { notify } from "../utils/notifications";
 import { useWallet } from "../context/wallet";
 import { Button, Card, Popover, Select, Spin } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { SettingOutlined, TwitterOutlined } from "@ant-design/icons";
 import { Settings } from "./settings";
 import { AppBar } from "./appBar";
 import {
@@ -14,51 +11,51 @@ import {
   useConnection,
   useConnectionConfig,
 } from "../utils/connection";
-import { Jobs } from './jobs/jobs';
+import { Jobs } from "./jobs/jobs";
 import { TokenTransfer } from "./instructions/tokenTransfer";
-import { CloseAccount } from './instructions/closeAccount';
-import { MintToken } from './instructions/mintToken';
+import { CloseAccount } from "./instructions/closeAccount";
+import { MintToken } from "./instructions/mintToken";
 
 export const ManualView = (props) => {
   const { wallet, connected } = useWallet();
-  const [ insBuilder, setInsBuilder ] = useState('');
-  const [ sending, setSending ] = useState(false);
-  const [ ins, setIns ] = useState([]);
+  const [insBuilder, setInsBuilder] = useState("");
+  const [sending, setSending] = useState(false);
+  const [ins, setIns] = useState([]);
   const connection = useConnection();
   const connectionConfig = useConnectionConfig();
   const { Option } = Select;
   const instructionList = [
     {
-      name: 'Token Transfer',
-      value: 'TokenTransfer'
+      name: "Token Transfer",
+      value: "TokenTransfer",
     },
-    { 
-      name:'Close Account',
-      value: 'CloseAccount'
+    {
+      name: "Close Account",
+      value: "CloseAccount",
     },
-    { 
-      name:'Mint Token',
-      value: 'MintToken'
-    }
+    {
+      name: "Mint Token",
+      value: "MintToken",
+    },
   ];
   const instructions = {
-    'TokenTransfer': <TokenTransfer setIns={setIns} ins={ins} />,
-    'CloseAccount': <CloseAccount setIns={setIns} ins={ins} />,
-    'MintToken': <MintToken setIns={setIns} ins={ins} />
+    TokenTransfer: <TokenTransfer setIns={setIns} ins={ins} />,
+    CloseAccount: <CloseAccount setIns={setIns} ins={ins} />,
+    MintToken: <MintToken setIns={setIns} ins={ins} />,
   };
 
   const buildAndSendTransaction = async (instructions) => {
     const signers = [];
     console.log(instructions);
-    
-    if(connected){
+
+    if (connected) {
       const tx = await sendTransaction(
         connection,
         wallet,
         instructions,
         signers,
         true,
-        setSending, 
+        setSending,
         setIns
       );
     }
@@ -68,19 +65,24 @@ export const ManualView = (props) => {
     <>
       <AppBar
         right={
-          <Popover
-            placement="topRight"
-            title="Settings"
-            content={<Settings />}
-            trigger="click"
-          >
-            <Button
-              shape="circle"
-              size="large"
-              type="text"
-              icon={<SettingOutlined />}
-            />
-          </Popover>
+          <>
+            <Popover
+              placement="topRight"
+              title="Settings"
+              content={<Settings />}
+              trigger="click"
+            >
+              <Button
+                shape="circle"
+                size="large"
+                type="text"
+                icon={<SettingOutlined />}
+              />
+            </Popover>
+            <a href="https://twitter.com/SolTricks">
+              <TwitterOutlined style={{ fontSize: "24px", color: "#4390e8" }} />
+            </a>
+          </>
         }
       />
       <div>
@@ -135,7 +137,7 @@ export const ManualView = (props) => {
               const instructions = ins.map((i) => i.instructions);
               const flattenIns = [].concat.apply([], instructions);
               console.log(flattenIns);
-              buildAndSendTransaction(flattenIns).then(res => {
+              buildAndSendTransaction(flattenIns).then((res) => {
                 console.log(res);
               });
             }}
