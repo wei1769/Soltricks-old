@@ -14,6 +14,7 @@ export const AppBar = (props: { left?: JSX.Element; right?: JSX.Element }) => {
     <div className="App-Bar">
       <div className="App-Bar-left">
         <div className="App-logo" style={{backgroundImage: `url(${Logo})`}} />
+        <a style={{marginLeft: '1rem'}} href='https://docs.soltricks.io'>Documentation</a>
         {props.left}
       </div>
       <div className="App-Bar-right">
