@@ -139,7 +139,6 @@ export const TokenTransfer = (props) => {
           if (tokenAddress !== undefined) {
             instructions = await checkMultiAddress(address);
             setIns([...ins, ...instructions]);
-            settokenAddress(undefined);
           }
         }}
       >
