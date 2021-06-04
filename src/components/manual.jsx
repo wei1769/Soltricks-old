@@ -129,8 +129,8 @@ export const ManualView = (props) => {
       >
         <Jobs ins={ins} setIns={setIns} />
       </div>
-
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <Spin tip="Sending..." spinning={sending} />
+      <div style={{ display: "flex", justifyContent: "center", marginTop: '1rem' }}>
         <Button
           style={{ margin: "0.5rem" }}
           onClick={() => {
@@ -144,7 +144,6 @@ export const ManualView = (props) => {
         >
           Send
         </Button>
-        <Spin tip="Sending..." spinning={sending} />
         <Button
           style={{ margin: "0.5rem" }}
           onClick={() => {
