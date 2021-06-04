@@ -271,6 +271,7 @@ export const sendTransaction = async (
     ),
     type: "info",
   });
+  console.log(txid);
 
   if (awaitConfirmation) {
     const status = (

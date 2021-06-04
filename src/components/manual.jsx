@@ -129,31 +129,31 @@ export const ManualView = (props) => {
       >
         <Jobs ins={ins} setIns={setIns} />
       </div>
-      <Spin tip="Sending..." spinning={sending}>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            style={{ margin: "0.5rem" }}
-            onClick={() => {
-              const instructions = ins.map((i) => i.instructions);
-              const flattenIns = [].concat.apply([], instructions);
-              console.log(flattenIns);
-              buildAndSendTransaction(flattenIns).then((res) => {
-                console.log(res);
-              });
-            }}
-          >
-            Send
-          </Button>
-          <Button
-            style={{ margin: "0.5rem" }}
-            onClick={() => {
-              setIns([]);
-            }}
-          >
-            Clear
-          </Button>
-        </div>
-      </Spin>
+
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button
+          style={{ margin: "0.5rem" }}
+          onClick={() => {
+            const instructions = ins.map((i) => i.instructions);
+            const flattenIns = [].concat.apply([], instructions);
+            console.log(flattenIns);
+            buildAndSendTransaction(flattenIns).then((res) => {
+              console.log(res);
+            });
+          }}
+        >
+          Send
+        </Button>
+        <Spin tip="Sending..." spinning={sending} />
+        <Button
+          style={{ margin: "0.5rem" }}
+          onClick={() => {
+            setIns([]);
+          }}
+        >
+          Clear
+        </Button>
+      </div>
     </>
   );
 };

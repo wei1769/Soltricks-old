@@ -184,7 +184,6 @@ export const TokenSelect = (props) => {
             {ownedTokens
               .filter((token) => !token.isAssociatedToken)
               .map((token) => {
-                console.log(token);
                 return (
                   <Option key={token.meta} value={token.meta}>
                     {token.label}
@@ -196,7 +195,6 @@ export const TokenSelect = (props) => {
             {ownedTokens
               .filter((token) => token.isAssociatedToken)
               .map((token) => {
-                console.log(token);
                 return (
                   <Option key={token.meta} value={token.meta}>
                     {token.label}
